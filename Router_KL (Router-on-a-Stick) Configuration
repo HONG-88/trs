@@ -1,1 +1,61 @@
+en
+conf t
+hostname Router_KL
+
+//Enable trunking main interface
+interface g0/0
+no shutdown
+
+//Subinterface for Server VLAN
+interface g0/0.3
+encapsulation dot1q 3
+ip address 205.72.3.1 255.255.255.0
+no shutdown
+
+//Subinterface for Engineering VLAN
+interface g0/0.40
+encapsulation dot1q 40
+ip address 205.72.40.1 255.255.255.0
+ip helper-address 205.72.3.10
+no shutdown
+
+//Subinterface for Finance VLAN
+interface g0/0.50
+encapsulation dot1q 50
+ip address 205.72.50.1 255.255.255.0
+ip helper-address 205.72.3.10
+no shutdown
+
+//Subinterface for Sales VLAN
+interface g0/0.60
+encapsulation dot1q 60
+ip address 205.72.60.1 255.255.255.0
+ip helper-address 205.72.3.10
+no shutdown
+
+//Enable routing
+ip routing
+
+//OSPF configuration
+router ospf 3
+network 205.72.3.0 0.0.0.255 area 0
+network 205.72.40.0 0.0.0.255 area 0
+network 205.72.50.0 0.0.0.255 area 0
+network 205.72.60.0 0.0.0.255 area 0
+
+//Basic security
+enable secret class
+
+line console 0
+password cisco
+login
+logging synchronous
+
+line vty 0 4
+password cisco
+login
+transport input ssh
+
+end
+copy running-config startup-config
 
