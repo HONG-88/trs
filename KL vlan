@@ -1,2 +1,93 @@
 en
 conf t
+hostname Switch_KL
+
+! VLAN creation
+vlan 3
+ name Server
+vlan 40
+ name Engineering_Department
+vlan 50
+ name Finance_Department
+vlan 60
+ name Sales_Department
+
+! Assign access ports for each department (adjust as per your topology)
+interface fa0/1
+ switchport mode access
+ switchport access vlan 40
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+
+interface fa0/2
+ switchport mode access
+ switchport access vlan 50
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+
+interface fa0/3
+ switchport mode access
+ switchport access vlan 60
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+
+interface fa0/4
+ switchport mode access
+ switchport access vlan 3
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+
+! Configure trunk link to router (ensure fa0/24 connects to router g0/0)
+interface fa0/24
+ switchport mode trunk
+ spanning-tree portfast trunk
+
+! (Optional) Disable unused ports
+interface range fa0/5 - 23
+ shutdown
+
+! Enable basic security
+enable secret class
+
+line console 0
+ password cisco
+ login
+ logging synchronous
+
+line vty 0 4
+ password cisco
+ login
+ transport input ssh
+
+! Enable DHCP snooping and DAI (protect all VLANs)
+ip dhcp snooping
+ip dhcp snooping vlan 3,40,50,60
+ip arp inspection vlan 3,40,50,60
+
+! Trust trunk port (uplink to router for DHCP/ARP)
+interface fa0/24
+ ip dhcp snooping trust
+ ip arp inspection trust
+
+! Enable STP portfast and bpduguard by default on all access ports
+spanning-tree portfast default
+spanning-tree bpduguard default
+
+end
+copy running-config startup-config
