@@ -2,7 +2,7 @@ en
 conf t
 hostname Switch_KL
 
-! VLAN creation
+// VLAN creation
 vlan 3
  name Server
 vlan 40
@@ -12,7 +12,7 @@ vlan 50
 vlan 60
  name Sales_Department
 
-! Assign access ports for each department (adjust as per your topology)
+//Assign access ports for each department
 interface fa0/1
  switchport mode access
  switchport access vlan 40
@@ -24,7 +24,7 @@ interface fa0/1
  switchport port-security violation shutdown
 
 interface fa0/2
- switchport mode access
+switchport mode access
  switchport access vlan 50
  spanning-tree portfast
  spanning-tree bpduguard enable
