@@ -45,7 +45,6 @@ network 205.72.60.0 0.0.0.255 area 0
 
 //Basic security
 enable secret class
-
 line console 0
 password cisco
 login
