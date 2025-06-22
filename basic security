@@ -1,0 +1,15 @@
+
+//MS1 Router kl
+enable secret class
+line console 0
+password cisco
+login
+logging synchronous
+
+line vty 0 4
+password cisco
+login
+transport input ssh
+
+end
+copy running-config startup-config
